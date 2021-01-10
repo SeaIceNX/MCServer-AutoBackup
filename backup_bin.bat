@@ -3,13 +3,12 @@ chcp 65001
 for /f "delims=" %%i in (
     'type "backup.ini"^| find "="'
 ) do set %%i
+set t1=%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%
+set t2=%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%
 md backup
 title %title%
 color 3f
 cls
-
-set t1=%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%
-set t2=%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%
 
 if /i not "%startbackup%" == "true" (
     if not "%startbackup%" == "false" (
@@ -17,43 +16,36 @@ if /i not "%startbackup%" == "true" (
         set error=true
     )
 )
-
 if /i not "%timebackup%" == "true" (
     if not "%timebackup%" == "false" (
         echo [%time:~0,8% ERROR]: 配置项 timebackup 错误（非布尔值）
         set error=true
     )
 )
-
 if /i not "%independent%" == "true" (
     if /i not "%independent%" == "false" (
         echo [%time:~0,8% ERROR]: 配置项 independent 错误（非布尔值）
         set error=true
     )
 )
-
 if "%servercommand%" == "" (
     if /i "%independent%" == "false" (
         echo [%time:~0,8% ERROR]: 配置项 servercommand 错误（为空）
         set error=true
     )
 )
-
 if "%worlds%" == "" (
     echo [%time:~0,8% ERROR]: 配置项 worlds 错误（为空）
     set error=true
 )
-
 if "%timer%" == "" (
     echo [%time:~0,8% ERROR]: 配置项 timer 错误（为空）
     set error=true
 )
-
 if "%backupcommand%" == "" (
     echo [%time:~0,8% ERROR]: 配置项 backupcommand 错误（为空）
     set error=true
 )
-
 if not "%error%" == "" (
     goto :pause
 )
@@ -61,10 +53,10 @@ if not "%error%" == "" (
 if /i %independent% == true (
     goto independent
 )
-
 if /i %startbackup% == false (
     goto timebackupstart
 )
+
 echo [%time:~0,8% INFO]: 正在开始备份存档...
 if "%time:~0,1%" == " " (
     %backupcommand% backup\%t1%.7z %worlds%
