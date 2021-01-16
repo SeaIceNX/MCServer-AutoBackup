@@ -99,7 +99,6 @@ if "%time:~0,1%" == " " (
 ) else (
     %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z %worlds%
 )
-echo %errorlevel%
 if errorlevel 9009 (
     cls
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！
