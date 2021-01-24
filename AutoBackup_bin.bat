@@ -1,4 +1,6 @@
 @echo off
+title 自动备份 AutoBackup
+color 3f
 chcp 65001 >nul
 dir backup.ini >nul
 if not errorlevel 0 (
@@ -12,8 +14,6 @@ md backup
 if not errorlevel 1 (
     set file=true
 )
-title 自动备份 AutoBackup
-color 3f
 cls
 
 if not "%file%" == "" (
@@ -21,7 +21,7 @@ if not "%file%" == "" (
 )
 if not "%ininotfound%" == "" (
     echo [%time:~0,8% ERROR] 找不到配置文件！
-    set error=true
+    goto pause
 )
 
 if /i not "%startbackup%" == "true" (
@@ -83,7 +83,7 @@ if /i not "%startbackup%" == "false" (
     )
 )
 if not "%error%" == "" (
-    goto :pause
+    goto pause
 )
 
 if /i %independent% == true (
