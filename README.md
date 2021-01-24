@@ -1,6 +1,6 @@
 # MCServer-AutoBackup
 
-#使用说明
+## 使用说明
 
 应用于生产环境前请先配置配置文件(backup.ini)
 
