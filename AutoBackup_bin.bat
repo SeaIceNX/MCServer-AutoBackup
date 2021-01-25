@@ -1,7 +1,7 @@
 @echo off
-title AutoBackup 自动备份
+chcp 6500
+1title AutoBackup 自动备份
 color 3f
-chcp 65001
 :inirestart
 dir backup.ini
 if errorlevel 1 (
