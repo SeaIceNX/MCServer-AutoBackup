@@ -1,10 +1,39 @@
 @echo off
-title 自动备份 AutoBackup
+title AutoBackup 自动备份
 color 3f
-chcp 65001 >nul
-dir backup.ini >nul
-if not errorlevel 0 (
-    set ininotfound=true
+chcp 65001
+:inirestart
+dir backup.ini
+if errorlevel 1 (
+    echo [backup]>>backup.ini
+    echo # backup.ini  AutoBackup配置文件>>backup.ini
+    echo.>>backup.ini
+    echo startbackup=true>>backup.ini
+    echo # 设置开服备份（布尔值）>>backup.ini
+    echo.>>backup.ini
+    echo timebackup=true>>backup.ini
+    echo # 设置定时备份（布尔值）>>backup.ini
+    echo.>>backup.ini
+    echo servercommand=bedrock_server.exe>>backup.ini
+    echo # 设置服务端启动命令（缺省值）>>backup.ini
+    echo.>>backup.ini
+    echo independent=false>>backup.ini
+    echo # 独立模式（servercommand、startbackup、timebackup、backuptype项将失效）>>backup.ini
+    echo.>>backup.ini
+    echo backuptype=hot>>backup.ini
+    echo # 备份模式（冷备份-cold 热备份-hot 冷备份目前只适用于不使用其他外置启动的服务端）>>backup.ini
+    echo.>>backup.ini
+    echo worlds=worlds>>backup.ini
+    echo # 设置需备份位置（缺省值）>>backup.ini
+    echo.>>backup.ini
+    echo timer=1800>>backup.ini
+    echo # 设置定时备份间隔（单位：秒 0~9999内整数）>>backup.ini
+    echo.>>backup.ini
+    echo backupcommand=7z.exe a>>backup.ini
+    echo # 备份命令开头（缺省值）>>backup.ini
+
+    set inisummon=true
+    goto inirestart
 ) else (
     for /f "delims=" %%i in (
         'type "backup.ini"^|find "="'
@@ -19,9 +48,8 @@ cls
 if not "%file%" == "" (
     echo [%time:~0,8% INFO] backup文件夹已创建
 )
-if not "%ininotfound%" == "" (
-    echo [%time:~0,8% ERROR] 找不到配置文件！
-    goto pause
+if not "%inisummon%" == "" (
+    echo [%time:~0,8% WARN] 找不到配置文件！已生成！
 )
 
 if /i not "%startbackup%" == "true" (
@@ -208,5 +236,5 @@ if errorlevel 9059 (
 
 :pause
 color cf
-echo [%time:~0,8% ERROR] 按任意键退出...
+echo [%time:~0,8% WARN] 按任意键退出...
 pause >nul
