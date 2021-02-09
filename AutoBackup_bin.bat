@@ -27,7 +27,7 @@ if errorlevel 1 (
     echo # 设置需备份位置（缺省值）>>backup.ini
     echo.>>backup.ini
     echo timer=1800>>backup.ini
-    echo # 设置定时备份间隔（单位：秒 0~9999内整数）>>backup.ini
+    echo # 设置定时备份间隔（单位：秒 0~99999内整数）>>backup.ini
     echo.>>backup.ini
     echo backupcommand=7z.exe a>>backup.ini
     echo # 备份命令开头（缺省值）>>backup.ini
@@ -46,10 +46,10 @@ if not errorlevel 1 (
 cls
 
 if not "%file%" == "" (
-    echo [%time:~0,8% INFO] backup文件夹已创建
+    echo [%time:~0,8% WARN] 保存文件夹已生成
 )
 if not "%inisummon%" == "" (
-    echo [%time:~0,8% WARN] 找不到配置文件！已生成！
+    echo [%time:~0,8% WARN] 配置文件已生成
 )
 
 if /i not "%startbackup%" == "true" (
@@ -129,20 +129,20 @@ if "%time:~0,1%" == " " (
 )
 if errorlevel 9009 (
     cls
-    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 1 (
     cls
-    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else (
-    echo [%time:~0,8% INFO] 备份完成！正在启动服务端...
+    echo [%time:~0,8% INFO] 备份完成！正在启动服务端...（按任意键跳过）
     color 3f
-    choice /t 3 /d y >nul
+    timeout /t 3 >nul
     cls
 )
 
@@ -153,18 +153,18 @@ if /i %timebackup% == false (
 start %servercommand%
 if errorlevel 9059 (
     cls
-    echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else (
     echo [%time:~0,8% INFO] 服务端启动成功！自动备份运行中...
 )
 
 :timebackup
-choice /t %timer% /d y >nul
+timeout /t %timer% /nobreak >nul
 :independent
 echo [%time:~0,8% INFO] 正在开始备份存档(定时备份)...
 color af
@@ -192,15 +192,15 @@ if /i %independent% == false (
 )
 if errorlevel 9009 (
     cls
-    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 1 (
     cls
-    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else (
     echo [%time:~0,8% INFO] 备份完成！距离下次备份还有%timer%秒。
@@ -226,11 +226,11 @@ if /i %startbackup% == false (
 %servercommand%
 if errorlevel 9059 (
     cls
-    echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！
+    echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 )
 
