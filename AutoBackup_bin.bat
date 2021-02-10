@@ -9,28 +9,34 @@ if errorlevel 1 (
     echo # backup.ini  AutoBackup配置文件>>backup.ini
     echo.>>backup.ini
     echo startbackup=true>>backup.ini
-    echo # 设置开服备份（布尔值）>>backup.ini
+    echo # 是否开服备份（布尔值）>>backup.ini
     echo.>>backup.ini
     echo timebackup=true>>backup.ini
-    echo # 设置定时备份（布尔值）>>backup.ini
+    echo # 是否定时备份（布尔值）>>backup.ini
     echo.>>backup.ini
     echo servercommand=bedrock_server.exe>>backup.ini
-    echo # 设置服务端启动命令（缺省值）>>backup.ini
+    echo # 服务端启动命令（缺省值）>>backup.ini
     echo.>>backup.ini
     echo independent=false>>backup.ini
-    echo # 独立模式（servercommand、startbackup、timebackup、backuptype项将失效）>>backup.ini
+    echo # 是否独立模式（servercommand、startbackup、timebackup、backuptype项将失效）>>backup.ini
     echo.>>backup.ini
     echo backuptype=hot>>backup.ini
     echo # 备份模式（冷备份-cold 热备份-hot 冷备份目前只适用于不使用其他外置启动的服务端）>>backup.ini
     echo.>>backup.ini
     echo worlds=worlds>>backup.ini
-    echo # 设置需备份位置（缺省值）>>backup.ini
+    echo # 需备份位置（缺省值）>>backup.ini
     echo.>>backup.ini
     echo timer=1800>>backup.ini
-    echo # 设置定时备份间隔（单位：秒 0~99999内整数）>>backup.ini
+    echo # 定时备份间隔（单位：秒 0~99999内整数）>>backup.ini
     echo.>>backup.ini
     echo backupcommand=7z.exe a>>backup.ini
     echo # 备份命令开头（缺省值）>>backup.ini
+    echo.>>backup.ini
+    echo restart=true>>backup.ini
+    echo # 是否崩服自重启（定时备份关闭时有效）>>backup.ini
+    echo.>>backup.ini
+    echo restarttimer=3>>backup.ini
+    echo # 崩服自重启间隔（单位：秒 -1~99999内整数【-1表示等待用户按任意键重启】 崩服自重启有效时有效）>>backup.ini
 
     set inisummon=true
     goto inirestart
@@ -108,6 +114,20 @@ if /i not "%startbackup%" == "false" (
                 set error=true
             )
         )
+    )
+)
+if /i not "%timebackup%" == "false" (
+    if /i not "%restart%" == "true" (
+        if /i not "%restart%" == "false" (
+            echo [%time:~0,8% ERROR] 配置项 restart 错误（非布尔值）
+            set error=true
+        )
+    )
+)
+if /i not "%restart%" == "false" (
+    if "%restarttimer%" == "" (
+        echo [%time:~0,8% ERROR] 配置项 restarttimer 错误（为空）
+        set error=true
     )
 )
 if not "%error%" == "" (
@@ -232,6 +252,12 @@ if errorlevel 9059 (
     cls
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
+)
+if %restart% == true (
+    color cf
+    echo [%time:~0,8% WARN]: 服务器已经关闭,将于%restarttimer%s后重启,不需要请直接关闭此窗口
+    timeout /t %restarttimer% >nul
+    goto serverstart
 )
 
 :pause
