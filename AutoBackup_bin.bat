@@ -35,7 +35,7 @@ if errorlevel 1 (
     echo restart=true>>backup.ini
     echo # 是否崩服自重启（定时备份关闭时有效）>>backup.ini
     echo.>>backup.ini
-    echo restarttimer=3>>backup.ini
+    echo restarttimer=3 >>backup.ini
     echo # 崩服自重启间隔（单位：秒 -1~99999内整数【-1表示等待用户按任意键重启】 崩服自重启有效时有效）>>backup.ini
 
     set inisummon=true
@@ -60,58 +60,58 @@ if not "%inisummon%" == "" (
 
 if /i not "%startbackup%" == "true" (
     if /i not "%startbackup%" == "false" (
-        echo [%time:~0,8% ERROR] 配置项 startbackup 错误（非布尔值）
-        set error=true
+        echo startbackup=true>>backup.ini
+        goto inirestart
     )
 )
 if /i not "%timebackup%" == "true" (
     if /i not "%timebackup%" == "false" (
-        echo [%time:~0,8% ERROR] 配置项 timebackup 错误（非布尔值）
-        set error=true
+        echo timebackup=true>>backup.ini
+        goto inirestart
     )
 )
 if /i not "%independent%" == "true" (
     if /i not "%independent%" == "false" (
-        echo [%time:~0,8% ERROR] 配置项 independent 错误（非布尔值）
-        set error=true
+        echo independent=false>>backup.ini
+        goto inirestart
     )
 )
 if /i not "%timebackup%" == "false" (
     if /i not "%backuptype%" == "cold" (
         if /i not "%backuptype%" == "hot" (
-            echo [%time:~0,8% ERROR] 配置项 backuptype 错误（非预设值）
-            set error=true
+            echo backuptype=hot>>backup.ini
+            goto inirestart
         )
     )
 )
 if "%servercommand%" == "" (
     if /i "%independent%" == "false" (
-        echo [%time:~0,8% ERROR] 配置项 servercommand 错误（为空）
-        set error=true
+        echo servercommand=bedrock_server.exe>>backup.ini
+        goto inirestart
     )
 )
 if /i not "%startbackup%" == "false" (
     if /i not "%timebackup%" == "false" (
         if /i not "%independent%" == "false" (
             if "%worlds%" == "" (
-                echo [%time:~0,8% ERROR] 配置项 worlds 错误（为空）
-                set error=true
+                echo worlds=worlds>>backup.ini
+                goto inirestart
             )
         )
     )
 )
 if /i not "%timebackup%" == "false" (
     if "%timer%" == "" (
-        echo [%time:~0,8% ERROR] 配置项 timer 错误（为空）
-        set error=true
+        echo timer=1800>>backup.ini
+        goto inirestart
     )
 )
 if /i not "%startbackup%" == "false" (
     if /i not "%timebackup%" == "false" (
         if /i not "%independent%" == "false" (
             if "%backupcommand%" == "" (
-                echo [%time:~0,8% ERROR] 配置项 backupcommand 错误（为空）
-                set error=true
+                echo backupcommand=7z.exe a>>backup.ini
+                goto inirestart
             )
         )
     )
@@ -119,19 +119,16 @@ if /i not "%startbackup%" == "false" (
 if /i not "%timebackup%" == "false" (
     if /i not "%restart%" == "true" (
         if /i not "%restart%" == "false" (
-            echo [%time:~0,8% ERROR] 配置项 restart 错误（非布尔值）
-            set error=true
+            echo restart=true>>backup.ini
+            goto inirestart
         )
     )
 )
 if /i not "%restart%" == "false" (
     if "%restarttimer%" == "" (
-        echo [%time:~0,8% ERROR] 配置项 restarttimer 错误（为空）
-        set error=true
+        echo restarttimer=3 >>backup.ini
+        goto inirestart
     )
-)
-if not "%error%" == "" (
-    goto pause
 )
 
 if /i %independent% == true (
@@ -255,7 +252,7 @@ if errorlevel 9059 (
 )
 if %restart% == true (
     color cf
-    echo [%time:~0,8% WARN]: 服务器已经关闭,将于%restarttimer%s后重启,不需要请直接关闭此窗口
+    echo [%time:~0,8% WARN]: 检测到服务器关闭 将于%restarttimer%s后重启 否则请直接关闭此窗口
     timeout /t %restarttimer% >nul
     goto serverstart
 )
