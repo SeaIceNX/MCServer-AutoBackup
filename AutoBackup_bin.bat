@@ -1,45 +1,59 @@
 @echo off
 chcp 65001
-title AutoBackup 自动备份
+title AutoBackup
 color 3f
-:inirestart
+title AutoBackup - 启动中...
+:allrestart
 dir backup.ini
 if errorlevel 1 (
     echo [backup]>>backup.ini
     echo # backup.ini  AutoBackup配置文件>>backup.ini
     echo.>>backup.ini
     echo startbackup=true>>backup.ini
-    echo # 是否开服备份（布尔值）>>backup.ini
+    echo # 是否开服备份>>backup.ini
+    echo # 允许值："true"或"false"
     echo.>>backup.ini
-    echo timebackup=true>>backup.ini
-    echo # 是否定时备份（布尔值）>>backup.ini
+    echo timingbackup=true>>backup.ini
+    echo # 是否定时备份>>backup.ini
+    echo # 允许值："true"或"false"
     echo.>>backup.ini
     echo servercommand=bedrock_server.exe>>backup.ini
-    echo # 服务端启动命令（缺省值）>>backup.ini
+    echo # 服务端启动命令>>backup.ini
+    echo # 允许值：任何字符串
     echo.>>backup.ini
     echo independent=false>>backup.ini
-    echo # 是否独立模式（servercommand、startbackup、timebackup、backuptype项将失效）>>backup.ini
+    echo # 是否独立模式>>backup.ini
+    echo # "servercommand"、"startbackup"、"timingbackup"、"backuptype"项将失效>>backup.ini
+    echo # 允许值："true"或"false"
     echo.>>backup.ini
     echo backuptype=hot>>backup.ini
-    echo # 备份模式（冷备份-cold 热备份-hot 冷备份目前只适用于不使用其他外置启动的服务端）>>backup.ini
+    echo # 备份模式>>backup.ini
+    echo # 冷备份目前只适用于不使用其他外置启动的服务端>>backup.ini
+    echo # 允许值："cold"或"hot"
     echo.>>backup.ini
     echo worlds=worlds>>backup.ini
-    echo # 需备份位置（缺省值）>>backup.ini
+    echo # 需备份位置>>backup.ini
+    echo # 允许值：任何字符串
     echo.>>backup.ini
     echo timer=1800>>backup.ini
-    echo # 定时备份间隔（单位：秒 0~99999内整数）>>backup.ini
+    echo # 定时备份间隔（单位：秒）>>backup.ini
+    echo # 允许值：在[0, 99999]范围内的整数
     echo.>>backup.ini
     echo backupcommand=7z.exe a>>backup.ini
-    echo # 备份命令开头（缺省值）>>backup.ini
+    echo # 备份命令开头>>backup.ini
+    echo # 允许值：任何字符串
     echo.>>backup.ini
     echo restart=true>>backup.ini
     echo # 是否崩服自重启（定时备份关闭时有效）>>backup.ini
+    echo # 允许值："true"或"false"
     echo.>>backup.ini
-    echo restarttimer=3 >>backup.ini
-    echo # 崩服自重启间隔（单位：秒 -1~99999内整数【-1表示等待用户按任意键重启】 崩服自重启有效时有效）>>backup.ini
+    echo restarttimer=3>>backup.ini
+    echo # 崩服自重启间隔（单位：秒）>>backup.ini
+    echo # 崩服自重启有效时有效>>backup.ini
+    echo # 允许值：[-1, 99999]内整数（-1表示等待用户按任何键重启）>>backup.ini
 
     set inisummon=true
-    goto inirestart
+    goto allrestart
 ) else (
     for /f "delims=" %%i in (
         'type "backup.ini"^|find "="'
@@ -61,165 +75,196 @@ if not "%inisummon%" == "" (
 if /i not "%startbackup%" == "true" (
     if /i not "%startbackup%" == "false" (
         echo startbackup=true>>backup.ini
-        goto inirestart
+        goto allrestart
     )
 )
-if /i not "%timebackup%" == "true" (
-    if /i not "%timebackup%" == "false" (
-        echo timebackup=true>>backup.ini
-        goto inirestart
+if /i not "%timingbackup%" == "true" (
+    if /i not "%timingbackup%" == "false" (
+        echo timingbackup=true>>backup.ini
+        goto allrestart
     )
 )
 if /i not "%independent%" == "true" (
     if /i not "%independent%" == "false" (
         echo independent=false>>backup.ini
-        goto inirestart
+        goto allrestart
     )
 )
-if /i not "%timebackup%" == "false" (
+if /i "%timingbackup%" == "true" (
     if /i not "%backuptype%" == "cold" (
         if /i not "%backuptype%" == "hot" (
             echo backuptype=hot>>backup.ini
-            goto inirestart
+            goto allrestart
         )
     )
 )
-if "%servercommand%" == "" (
-    if /i "%independent%" == "false" (
+if /i "%independent%" == "false" (
+    if "%servercommand%" == "" (
         echo servercommand=bedrock_server.exe>>backup.ini
-        goto inirestart
+        goto allrestart
     )
 )
-if /i not "%startbackup%" == "false" (
-    if /i not "%timebackup%" == "false" (
-        if /i not "%independent%" == "false" (
-            if "%worlds%" == "" (
-                echo worlds=worlds>>backup.ini
-                goto inirestart
-            )
-        )
+if /i "%startbackup%" == "true" (
+    if "%worlds%" == "" (
+        echo worlds=worlds>>backup.ini
+        goto allrestart
     )
 )
-if /i not "%timebackup%" == "false" (
+if /i "%timingbackup%" == "true" (
+    if "%worlds%" == "" (
+        echo worlds=worlds>>backup.ini
+        goto allrestart
+    )
+)
+if /i "%independent%" == "true" (
+    if "%worlds%" == "" (
+        echo worlds=worlds>>backup.ini
+        goto allrestart
+    )
+)
+if /i "%timingbackup%" == "true" (
     if "%timer%" == "" (
         echo timer=1800>>backup.ini
-        goto inirestart
+        goto allrestart
     )
 )
-if /i not "%startbackup%" == "false" (
-    if /i not "%timebackup%" == "false" (
-        if /i not "%independent%" == "false" (
-            if "%backupcommand%" == "" (
-                echo backupcommand=7z.exe a>>backup.ini
-                goto inirestart
-            )
-        )
+if /i "%startbackup%" == "true" (
+    if "%backupcommand%" == "" (
+        echo backupcommand=7z.exe a>>backup.ini
+        goto allrestart
     )
 )
-if /i not "%timebackup%" == "false" (
+if /i "%timingbackup%" == "true" (
+    if "%backupcommand%" == "" (
+        echo backupcommand=7z.exe a>>backup.ini
+        goto allrestart
+    )
+)
+if /i "%independent%" == "true" (
+    if "%backupcommand%" == "" (
+        echo backupcommand=7z.exe a>>backup.ini
+        goto allrestart
+    )
+)
+if /i "%timingbackup%" == "false" (
     if /i not "%restart%" == "true" (
         if /i not "%restart%" == "false" (
             echo restart=true>>backup.ini
-            goto inirestart
+            goto allrestart
         )
     )
 )
-if /i not "%restart%" == "false" (
+if /i "%restart%" == "true" (
     if "%restarttimer%" == "" (
         echo restarttimer=3 >>backup.ini
-        goto inirestart
+        goto allrestart
     )
 )
+title AutoBackup
 
 if /i %independent% == true (
     goto independent
 )
 if /i %startbackup% == false (
-    goto timebackupstart
+    goto timingbackupstart
 )
+title AutoBackup - 备份中...
 echo [%time:~0,8% INFO] 正在开始备份存档(开服备份)...
 color af
 if "%time:~0,1%" == " " (
-    %backupcommand% backup\%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%.7z %worlds%
+    %backupcommand% backup\%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%.7z "%worlds%"
 ) else (
-    %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z %worlds%
+    %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z "%worlds%"
 )
 if errorlevel 9009 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 1 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else (
-    echo [%time:~0,8% INFO] 备份完成！正在启动服务端...（按任意键跳过）
+    title AutoBackup
+    echo [%time:~0,8% INFO] 备份完成！正在启动服务端...（按任何键跳过）
     color 3f
     timeout /t 3 >nul
     cls
 )
 
-:timebackupstart
-if /i %timebackup% == false (
+:timingbackupstart
+if /i %timingbackup% == false (
     goto serverstart
 )
+title AutoBackup - 启动服务器中...
 start %servercommand%
 if errorlevel 9059 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else (
+    title AutoBackup - 等待中...
     echo [%time:~0,8% INFO] 服务端启动成功！自动备份运行中...
 )
 
-:timebackup
+:timingbackup
 timeout /t %timer% /nobreak >nul
 :independent
+title AutoBackup - 备份中...
 echo [%time:~0,8% INFO] 正在开始备份存档(定时备份)...
 color af
 if /i %independent% == false (
     if /i %backuptype% == hot (
         if "%time:~0,1%" == " " (
-            %backupcommand% backup\%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%.7z %worlds%
+            %backupcommand% backup\%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%.7z "%worlds%"
         ) else (
-            %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z %worlds%
+            %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z "%worlds%"
         )
     ) else (
         taskkill /f /im %servercommand% /t
         if "%time:~0,1%" == " " (
-            %backupcommand% backup\%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%.7z %worlds%
+            %backupcommand% backup\%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%.7z "%worlds%"
         ) else (
-            %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z %worlds%
+            %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z "%worlds%"
         )
     )
 ) else (
     if "%time:~0,1%" == " " (
-        %backupcommand% backup\%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%.7z %worlds%
+        %backupcommand% backup\%date:~8,2%%date:~11,2%0%time:~1,1%%time:~3,2%%time:~6,2%.7z "%worlds%"
     ) else (
-        %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z %worlds%
+        %backupcommand% backup\%date:~8,2%%date:~11,2%%time:~0,2%%time:~3,2%%time:~6,2%.7z "%worlds%"
     )
 )
 if errorlevel 9009 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 1 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else (
+    title AutoBackup - 等待中...
     echo [%time:~0,8% INFO] 备份完成！距离下次备份还有%timer%秒。
     color 3f
     if /i %independent% == false (
@@ -227,31 +272,36 @@ if errorlevel 9009 (
             start %servercommand%
         )
     )
-    if /i %timebackup% == true (
-        goto timebackup
+    if /i %timingbackup% == true (
+        goto timingbackup
     ) else if /i %independent% == true (
-        goto timebackup
+        goto timingbackup
     )
 )
 
 :serverstart
+title AutoBackup - 服务器
 if /i %startbackup% == false (
-    if /i %timebackup% == false (
+    if /i %timingbackup% == false (
         echo [%time:~0,8% WARN] 备份功能已被全部关闭！请检查配置文件！
+        title AutoBackup - QAQ
     )
 )
 %servercommand%
 if errorlevel 9059 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
+    title AutoBackup - 错误！
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 )
 if %restart% == true (
     color cf
+    title AutoBackup - 重启中...
     echo [%time:~0,8% WARN]: 检测到服务器关闭 将于%restarttimer%s后重启 否则请直接关闭此窗口
     timeout /t %restarttimer% >nul
     goto serverstart
@@ -259,5 +309,5 @@ if %restart% == true (
 
 :pause
 color cf
-echo [%time:~0,8% WARN] 按任意键退出...
+echo [%time:~0,8% WARN] 按任何键退出...
 pause >nul
