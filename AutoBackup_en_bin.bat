@@ -201,6 +201,12 @@ if errorlevel 9009 (
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
+) else if errorlevel 7 (
+    cls
+    title AutoBackup - ERROR!
+    echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
+    echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
+    goto pause
 ) else if errorlevel 5 (
     cls
     title AutoBackup - ERROR!
@@ -243,10 +249,10 @@ if errorlevel 9059 (
 ) else (
     title AutoBackup - Waiting...
     echo [%date:~3,10% %time:~0,8% INFO] Server started>>backup.log
-    echo [%time:~0,8% INFO] The server started successfully! Automatic backup is running...
+    echo [%time:~0,8% INFO] The server started successfully! Automatic backup is running（Press any key to skip）...
 )
 :delaybackup
-timeout /t %delay% /nobreak >nul
+timeout /t %delay% >nul
 
 :independent
 title AutoBackup - Working...
@@ -287,6 +293,12 @@ if errorlevel 9009 (
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
+) else if errorlevel 7 (
+    cls
+    title AutoBackup - ERROR!
+    echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
+    echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
+    goto pause
 ) else if errorlevel 5 (
     cls
     title AutoBackup - ERROR!
@@ -302,7 +314,7 @@ if errorlevel 9009 (
 ) else (
     title AutoBackup - Waiting
     echo [%date:~3,10% %time:~0,8% INFO] A delayed backup was complete>>backup.log
-    echo [%time:~0,8% INFO] The backup is complete! %delay%s until the next backup
+    echo [%time:~0,8% INFO] The backup is complete! %delay%s until the next backup（Press any key to skip）
     color 3f
     if /i %independent% == false (
         if /i %backuptype% == cold (
@@ -342,7 +354,7 @@ if %restart% == true (
     color cf
     title AutoBackup - Restarting...
     echo [%date:~3,10% %time:~0,8% INFO] Restart server>>backup.log
-    echo [%time:~0,8% WARN]: The server is detected to be shut down, it will restart after %restarttimer%s, otherwise please close this window directly
+    echo [%time:~0,8% WARN]: The server is detected to be shut down（Press any kay to skip）, it will restart after %restarttimer%s, otherwise please close this window directly
     timeout /t %restarttimer% >nul
     goto serverstart
 )
