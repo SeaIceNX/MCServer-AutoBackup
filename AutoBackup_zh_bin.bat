@@ -201,6 +201,12 @@ if errorlevel 9009 (
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
+) else if errorlevel 7 (
+    cls
+    title AutoBackup - 错误!
+    echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
+    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
+    goto pause
 ) else if errorlevel 5 (
     cls
     title AutoBackup - 错误!
@@ -243,10 +249,10 @@ if errorlevel 9059 (
 ) else (
     title AutoBackup - 等待中...
     echo [%date:~3,10% %time:~0,8% INFO] 启动了服务器>>backup.log
-    echo [%time:~0,8% INFO] 服务端启动成功！自动备份运行中...
+    echo [%time:~0,8% INFO] 服务端启动成功！自动备份运行中...（按任何键跳过等待）
 )
 :delaybackup
-timeout /t %delay% /nobreak >nul
+timeout /t %delay% >nul
 
 :independent
 title AutoBackup - 备份中...
@@ -287,6 +293,12 @@ if errorlevel 9009 (
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
+) else if errorlevel 7 (
+    cls
+    title AutoBackup - 错误!
+    echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
+    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
+    goto pause
 ) else if errorlevel 5 (
     cls
     title AutoBackup - 错误!
@@ -302,7 +314,7 @@ if errorlevel 9009 (
 ) else (
     title AutoBackup - 等待中...
     echo [%date:~3,10% %time:~0,8% INFO] 进行了一次延时备份>>backup.log
-    echo [%time:~0,8% INFO] 备份完成！距离下次备份还有%delay%秒。
+    echo [%time:~0,8% INFO] 备份完成！距离下次备份还有%delay%秒（按任何键跳过等待）
     color 3f
     if /i %independent% == false (
         if /i %backuptype% == cold (
