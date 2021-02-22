@@ -1,14 +1,14 @@
 @echo off
 chcp 65001>nul
-title AutoBackup
+title Backuper
 color 3f
-title AutoBackup - 启动中...
+title Backuper - 启动中...
 :allrestart
 dir backup.ini>nul
 if errorlevel 1 (
     (
         echo [backup]>>backup.ini
-        echo # backup.ini  AutoBackup配置文件>>backup.ini
+        echo # backup.ini  Backuper配置文件>>backup.ini
         echo.>>backup.ini
         echo startbackup=true>>backup.ini
         echo # 是否开服备份>>backup.ini
@@ -178,8 +178,8 @@ if /i "%restart%" == "true" (
     )
 )
 
-title AutoBackup
-echo [%date:~3,10% %time:~0,8% INFO] AutoBackup被启动了>>backup.log
+title Backuper
+echo [%date:~3,10% %time:~0,8% INFO] Backuper被启动了>>backup.log
 if /i %independent% == true (
     goto independent
 )
@@ -187,7 +187,7 @@ if /i %startbackup% == false (
     goto delaybackupstart
 )
 
-title AutoBackup - 备份中...
+title Backuper - 备份中...
 echo [%time:~0,8% INFO] 正在开始备份存档(开服备份)...
 color af
 if "%time:~0,1%" == " " (
@@ -197,30 +197,30 @@ if "%time:~0,1%" == " " (
 )
 if errorlevel 9009 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 7 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 1 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else (
-    title AutoBackup
+    title Backuper
     echo [%date:~3,10% %time:~0,8% INFO] 进行了一次开服备份>>backup.log
     echo [%time:~0,8% INFO] 备份完成！正在启动服务端...（按任何键跳过）
     color 3f
@@ -232,22 +232,22 @@ if errorlevel 9009 (
 if /i %delaybackup% == false (
     goto serverstart
 )
-title AutoBackup - 启动服务器中...
+title Backuper - 启动服务器中...
 start %servercommand%
 if errorlevel 9059 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 开服时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 开服时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else (
-    title AutoBackup - 等待中...
+    title Backuper - 等待中...
     echo [%date:~3,10% %time:~0,8% INFO] 启动了服务器>>backup.log
     echo [%time:~0,8% INFO] 服务端启动成功！自动备份运行中...（按任何键跳过等待）
 )
@@ -255,7 +255,7 @@ if errorlevel 9059 (
 timeout /t %delay% >nul
 
 :independent
-title AutoBackup - 备份中...
+title Backuper - 备份中...
 echo [%time:~0,8% INFO] 正在开始备份存档(延时备份)...
 color af
 if /i %independent% == false (
@@ -289,78 +289,77 @@ if /i %independent% == false (
 )
 if errorlevel 9009 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 7 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 1 (
-    cls
-    title AutoBackup - 错误!
-    echo [%date:~3,10% %time:~0,8% ERROR] 备份时检测到错误！报错码：%errorlevel%>>backup.log
-    echo [%time:~0,8% ERROR] 备份失败！请检查配置文件！报错码：%errorlevel%
-    goto pause
+    title Backuper - 等待中...
+    echo [%date:~3,10% %time:~0,8% WARN] 备份时检测到错误！报错码：%errorlevel%>>backup.log
+    echo [%time:~0,8% WARN] 备份失败！请检查配置文件！报错码：%errorlevel%
+    color 3f
 ) else (
-    title AutoBackup - 等待中...
+    title Backuper - 等待中...
     echo [%date:~3,10% %time:~0,8% INFO] 进行了一次延时备份>>backup.log
     echo [%time:~0,8% INFO] 备份完成！距离下次备份还有%delay%秒（按任何键跳过等待）
     color 3f
-    if /i %independent% == false (
-        if /i %backuptype% == cold (
-            start %servercommand%
-        )
+)
+if /i %independent% == false (
+    if /i %backuptype% == cold (
+        start %servercommand%
     )
-    if /i %delaybackup% == true (
-        goto delaybackup
-    ) else if /i %independent% == true (
-        goto delaybackup
-    )
+)
+if /i %delaybackup% == true (
+    goto delaybackup
+) else if /i %independent% == true (
+    goto delaybackup
 )
 
 :serverstart
-title AutoBackup - 服务器
+title Backuper - 服务器
 if /i %startbackup% == false (
     if /i %delaybackup% == false (
         echo [%time:~0,8% WARN] 备份功能已被全部关闭！请检查配置文件！
-        title AutoBackup - QAQ
+        title Backuper - QAQ
     )
 )
 %servercommand%
 if errorlevel 9059 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 开服时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    title AutoBackup - 错误!
+    title Backuper - 错误!
     echo [%date:~3,10% %time:~0,8% ERROR] 开服时检测到错误！报错码：%errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] 服务端启动失败！请检查配置文件！报错码：%errorlevel%
     goto pause
 )
 if %restart% == true (
     color cf
-    title AutoBackup - 重启中...
+    title Backuper - 重启中...
     echo [%date:~3,10% %time:~0,8% INFO] 自重启了服务器>>backup.log
-    echo [%time:~0,8% WARN]: 检测到服务器关闭 将于%restarttimer%s后重启 否则请直接关闭此窗口
+    echo [%time:~0,8% WARN]: 检测到服务器关闭 将于%restarttimer%s后重启(可按下任何键跳过) 否则请直接关闭此窗口
     timeout /t %restarttimer% >nul
     goto serverstart
 )
 
 :pause
 color cf
-echo [%date:~3,10% %time:~0,8% INFO] AutoBackup被关闭了>>backup.log
+echo [%date:~3,10% %time:~0,8% INFO] Backuper被关闭了>>backup.log
 echo [%time:~0,8% WARN] 按任何键退出...
 pause >nul
