@@ -1,14 +1,14 @@
 @echo off
 chcp 65001>nul
-title AutoBackup
+title Backuper
 color 3f
-title AutoBackup - Starting...
+title Backuper - Starting...
 :allrestart
 dir backup.ini>nul
 if errorlevel 1 (
     (
         echo [backup]>>backup.ini
-        echo # backup.ini  Config of AutoBackup >>backup.ini
+        echo # backup.ini  Config of Backuper >>backup.ini
         echo. >>backup.ini
         echo startbackup=true>>backup.ini
         echo # Sets the backup before server start >>backup.ini
@@ -178,8 +178,8 @@ if /i "%restart%" == "true" (
     )
 )
 
-title AutoBackup
-echo [%date:~3,10% %time:~0,8% INFO] AutoBackup started>>backup.log
+title Backuper
+echo [%date:~3,10% %time:~0,8% INFO] Backuper started>>backup.log
 if /i %independent% == true (
     goto independent
 )
@@ -187,7 +187,7 @@ if /i %startbackup% == false (
     goto delaybackupstart
 )
 
-title AutoBackup - Working...
+title Backuper - Working...
 echo [%time:~0,8% INFO] Starting backup archive（open server backup）...
 color af
 if "%time:~0,1%" == " " (
@@ -197,30 +197,30 @@ if "%time:~0,1%" == " " (
 )
 if errorlevel 9009 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else if errorlevel 7 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else if errorlevel 1 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else (
-    title AutoBackup
+    title Backuper
     echo [%date:~3,10% %time:~0,8% INFO] An open server backup was complete>>backup.log
     echo [%time:~0,8% INFO] The backup is complete! Starting the server before 3s（press any key to skip）...
     color 3f
@@ -232,22 +232,22 @@ if errorlevel 9009 (
 if /i %delaybackup% == false (
     goto serverstart
 )
-title AutoBackup - Opening...
+title Backuper - Opening...
 start %servercommand%
 if errorlevel 9059 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Start Server failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Start failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Start Server failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Start failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else (
-    title AutoBackup - Waiting...
+    title Backuper - Waiting...
     echo [%date:~3,10% %time:~0,8% INFO] Server started>>backup.log
     echo [%time:~0,8% INFO] The server started successfully! Automatic backup is running（Press any key to skip）...
 )
@@ -255,7 +255,7 @@ if errorlevel 9059 (
 timeout /t %delay% >nul
 
 :independent
-title AutoBackup - Working...
+title Backuper - Working...
 echo [%time:~0,8% INFO] Starting backup archive（timing backup）...
 color af
 if /i %independent% == false (
@@ -289,70 +289,69 @@ if /i %independent% == false (
 )
 if errorlevel 9009 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else if errorlevel 7 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else if errorlevel 1 (
-    cls
-    title AutoBackup - ERROR!
+    title Backuper - Waiting
     echo [%date:~3,10% %time:~0,8% ERROR] Backup failed! Error code: %errorlevel%>>backup.log
-    echo [%time:~0,8% ERROR] Backup failed! Please check the config file! Error code: %errorlevel%
-    goto pause
+    echo [%time:~0,8% WARN] Backup failed! Please check the config file! Error code: %errorlevel%
+    color 3f
 ) else (
-    title AutoBackup - Waiting
+    title Backuper - Waiting
     echo [%date:~3,10% %time:~0,8% INFO] A delayed backup was complete>>backup.log
     echo [%time:~0,8% INFO] The backup is complete! %delay%s until the next backup（Press any key to skip）
     color 3f
-    if /i %independent% == false (
-        if /i %backuptype% == cold (
-            start %servercommand%
-        )
+)
+if /i %independent% == false (
+    if /i %backuptype% == cold (
+        start %servercommand%
     )
-    if /i %delaybackup% == true (
-        goto delaybackup
-    ) else if /i %independent% == true (
-        goto delaybackup
-    )
+)
+if /i %delaybackup% == true (
+    goto delaybackup
+) else if /i %independent% == true (
+    goto delaybackup
 )
 
 :serverstart
-title AutoBackup - Server
+title Backuper - Server
 if /i %startbackup% == false (
     if /i %delaybackup% == false (
         echo [%time:~0,8% WARN] The backup function has been completely closed! Please check the configuration file!
-        title AutoBackup - QAQ
+        title Backuper - QAQ
     )
 )
 %servercommand%
 if errorlevel 9059 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Start Server failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Start Server failed! Please check the config file! Error code: %errorlevel%
     goto pause
 ) else if errorlevel 5 (
     cls
-    title AutoBackup - ERROR!
+    title Backuper - ERROR!
     echo [%date:~3,10% %time:~0,8% ERROR] Start Server failed! Error code: %errorlevel%>>backup.log
     echo [%time:~0,8% ERROR] Start Server failed! Please check the config file! Error code: %errorlevel%
     goto pause
 )
 if %restart% == true (
     color cf
-    title AutoBackup - Restarting...
+    title Backuper - Restarting...
     echo [%date:~3,10% %time:~0,8% INFO] Restart server>>backup.log
     echo [%time:~0,8% WARN]: The server is detected to be shut down（Press any kay to skip）, it will restart after %restarttimer%s, otherwise please close this window directly
     timeout /t %restarttimer% >nul
@@ -361,6 +360,6 @@ if %restart% == true (
 
 :pause
 color cf
-echo [%date:~3,10% %time:~0,8% INFO] AutoBackup closed>>backup.log
+echo [%date:~3,10% %time:~0,8% INFO] Backuper closed>>backup.log
 echo [%time:~0,8% WARN] Press any key to exit...
 pause >nul
